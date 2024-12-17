@@ -1,3 +1,3 @@
 mod navigation;
-mod head;
 mod body;
+pub mod layout;
