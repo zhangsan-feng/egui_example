@@ -1,9 +1,10 @@
-use egui::{Layout, Pos2, Sense, Vec2};
+
 use crate::font::font;
+use super::navigation::Navigation;
 
 
 #[derive(Clone, Copy, Debug, PartialEq, Default)]
-enum ApplicationPage {
+pub enum ApplicationPage {  // 添加 pub 关键字使其公有
     #[default]
     HomePage,
     TestPage
@@ -54,38 +55,27 @@ impl ApplicationComponent {
 impl eframe::App for ApplicationComponent {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
 
-        egui::TopBottomPanel::top("top_panel").min_height(50.0).show(ctx, |ui| {
+
+        egui::TopBottomPanel::top("top_panel")
+        .min_height(50.0).show(ctx, |ui| {
             egui::ScrollArea::vertical().show(ui, |ui| {
                 ui.vertical_centered(|ui| {
                     ui.heading("标题栏");
                 });
-
             });
         });
 
-        egui::SidePanel::left("left_panel").resizable(false).min_width(180.0).show(ctx,  |ui| {
-            // ui.horizontal() 横
-            // ui.vertical()   纵
+        egui::SidePanel::left("left_panel")
+        .resizable(false)
+        .min_width(180.0)
 
-
-            ui.vertical(|ui| {
-
-                let rect = ui.allocate_exact_size(Vec2::new(100.0,30.0).into(),Sense::hover());
-
-                ui.child_ui( rect.0, Layout::centered_and_justified(egui::Direction::BottomUp), None )
-                    .selectable_value(&mut self.current_page, ApplicationPage::HomePage, "HomePage");
-
-
-                let rect = ui.allocate_exact_size(Vec2::new(100.20,30.0).into(),Sense::hover());
-                ui.child_ui( rect.0, Layout::centered_and_justified(egui::Direction::TopDown), None )
-                    .selectable_value(&mut self.current_page, ApplicationPage::TestPage, "TestPage");
-
-            });
+        .show(ctx, |ui| {
+            Navigation::render(ui, &mut self.current_page);
         });
 
-        egui::CentralPanel::default().show(ctx, |ui| {
+        egui::CentralPanel::default()
+        .show(ctx, |ui| {
             self.main_home(ui)
         });
     }
-
 }

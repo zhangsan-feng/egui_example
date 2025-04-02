@@ -22,11 +22,13 @@ fn main() -> eframe::Result {
             .with_transparent(true)
             .with_inner_size( [1400.0, 700.0])
             .with_resizable(false)
-            .with_maximized(false)
+            // .with_maximized(false)
             .with_fullscreen(false)
-            .with_maximize_button(false)
+            // .with_maximize_button(false)
             .with_icon(IconData { rgba:  raw_data, width: w, height: h })
-        // .with_decorations(false)  //头顶导航栏
+            .with_decorations(true)  //头顶导航栏是是否显示
+           .with_visible(true)
+           .with_decorations(true)
         ,
         centered:true,
         ..Default::default()
