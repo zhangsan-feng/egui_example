@@ -1,0 +1,38 @@
+[2025-04-15 15:48:34] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\lib.rs:269] Using the glow renderer
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:395] Event::Resumed
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:938] trying to create glutin Display with config: ConfigTemplateBuilder { template: ConfigTemplate { color_buffer_type: Rgb { r_size: 8, g_size: 8, b_size: 8 }, alpha_size: 8, depth_size: 0, stencil_size: 0, num_samples: None, min_swap_interval: None, max_swap_interval: None, config_surface_types: ConfigSurfaceTypes(WINDOW), api: None, transparency: true, single_buffering: false, stereoscopy: None, float_pixels: false, max_pbuffer_width: None, hardware_accelerated: None, max_pbuffer_height: None, native_window: None } }
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:963] using the first config from config picker closure. config: Wgl(Config { inner: Config { hdc: -553575632, pixel_format_index: 2 } })
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:976] successfully created GL Display with version: WGL and supported features: DisplayFeatures(CONTEXT_ROBUSTNESS | FLOAT_PIXEL_FORMAT | SWAP_CONTROL | CONTEXT_RELEASE_BEHAVIOR | CREATE_ES_CONTEXT | MULTISAMPLING_PIXEL_FORMATS | SRGB_FRAMEBUFFERS)
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:986] creating gl context using raw window handle: Some(Win32(Win32WindowHandle { hwnd: 134394, hinstance: Some(140698247888896) }))
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:1123] Initializing egui_winit for viewport "FFFF"
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:1135] Creating a gl_surface for viewport "FFFF"
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\egui_glow-0.30.0\src\painter.rs:155] 
+opengl version: 3.3.0 - Build 32.0.101.6078
+opengl renderer: Intel(R) Iris(R) Xe Graphics
+opengl vendor: Intel
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\egui_glow-0.30.0\src\shader_version.rs:28] Shader version: Gl140 ("3.30 - Build 32.0.101.6078").
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\egui_glow-0.30.0\src\painter.rs:171] Shader header: "#version 140\n".
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\egui_glow-0.30.0\src\painter.rs:180] SRGB texture Support: true
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\egui_glow-0.30.0\src\painter.rs:187] SRGB framebuffer Support: true
+[2025-04-15 15:48:34] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\egui_glow-0.30.0\src\vao.rs:122] GL version: "3.3.0 - Build 32.0.101.6078".
+[2025-04-15 15:48:41] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\glow_integration.rs:786] Received WindowEvent::CloseRequested for viewport Some("FFFF")
+[2025-04-15 15:48:41] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\epi_integration.rs:293] Closing root viewport (ViewportCommand::CancelClose was not sent)
+[2025-04-15 15:48:41] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\run.rs:144] Asking to exit event loop…
+[2025-04-15 15:48:41] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\run.rs:210] Received Event::LoopExiting - saving app state…
+[2025-04-15 15:48:41] [DEBUG] [C:\Users\10463\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\eframe-0.30.0\src\native\run.rs:312] eframe window closed
+[2025-04-15 15:49:31] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 15:50:47] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 15:51:13] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 15:51:28] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:01:10] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:07:35] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:07:50] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:08:32] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:09:09] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:10:31] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:10:50] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:12:13] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 16:58:25] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 17:10:09] [INFO] [src\config\logger.rs:39] init logger config success
+[2025-04-15 17:10:31] [INFO] [src\config\logger.rs:39] init logger config success

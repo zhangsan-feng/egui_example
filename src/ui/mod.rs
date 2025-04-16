@@ -1,2 +1,2 @@
 pub mod home;
-mod component;
+pub mod component;
