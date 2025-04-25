@@ -5,7 +5,6 @@ mod config;
 mod ui;
 mod font;
 mod win32;
-
 use eframe::egui;
 use eframe::egui::IconData;
 use config::logger;
