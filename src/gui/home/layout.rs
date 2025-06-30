@@ -1,8 +1,9 @@
 use eframe::emath::vec2;
+use serde::{ Serialize, Deserialize};
 use crate::font::font;
-use crate::ui::component::{app_manager, network_manager, process_manager, system_manager};
+use crate::gui::component::{app_manager, network_manager, process_manager, system_manager};
 
-#[derive(Clone, Copy, Debug, PartialEq, Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Default, Serialize)]
 pub enum ApplicationPage {
     #[default]
     ProcessManagerPage,
@@ -36,9 +37,9 @@ impl eframe::App for ApplicationComponent {
 
         egui::SidePanel::left("left_panel").resizable(false).max_width(120.0).show(ctx, |ui| {
             ui.vertical(|ui| {
-                ui.style_mut().visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(240, 240, 240);
-                let button_padding = vec2(8.0, 8.0);
-                ui.style_mut().spacing.button_padding = button_padding;
+                // ui.style_mut().visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(240, 240, 240);
+            
+                ui.style_mut().spacing.button_padding =  vec2(8.0, 8.0);
                 ui.with_layout(egui::Layout::top_down_justified(egui::Align::Center), |ui| {
                     for (page, label) in pages.iter() {
                         if ui.selectable_label(self.current_page == *page, *label).clicked() {

@@ -2,7 +2,7 @@
 #![allow(rustdoc::missing_crate_level_docs)] // it's an example
 
 mod config;
-mod ui;
+mod gui;
 mod font;
 mod win32;
 use eframe::egui;
@@ -36,9 +36,9 @@ async fn main() ->eframe::Result {
     };
 
     eframe::run_native(
-        "桌面app",
+        "egui_example",
         options,
-        Box::new(|cc| Ok(Box::new(ui::home::layout::ApplicationComponent::new(cc)))),
+        Box::new(|cc| Ok(Box::new(gui::home::layout::ApplicationComponent::new(cc)))),
     )
 }
 
