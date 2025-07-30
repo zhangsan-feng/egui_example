@@ -1,7 +1,9 @@
 use eframe::emath::vec2;
-use serde::{ Serialize, Deserialize};
+use egui::Rangef;
+use serde::{Serialize, Deserialize};
 use crate::font::font;
 use crate::gui::component::{app_manager, network_manager, process_manager, system_manager};
+use crate::gui::navigation::navigation::Navigation;
 
 #[derive(Clone, Copy, Debug, PartialEq, Default, Serialize)]
 pub enum ApplicationPage {
@@ -13,7 +15,8 @@ pub enum ApplicationPage {
 }
 #[derive(Default)]
 pub struct ApplicationComponent {
-    current_page:ApplicationPage
+    current_page:ApplicationPage,
+    top_nav: Navigation,
 }
 
 impl ApplicationComponent {
@@ -22,6 +25,7 @@ impl ApplicationComponent {
         font::add_font(&cc.egui_ctx);
         Self {
             current_page:ApplicationPage::ProcessManagerPage,
+            top_nav: Navigation::new(),
         }
     }
 }
@@ -34,11 +38,13 @@ impl eframe::App for ApplicationComponent {
             (ApplicationPage::AppManagerPage,       "应用管理"),
             (ApplicationPage::NetworkManagerPage,   "网络管理"),
         ];
+        egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
+            self.top_nav.view(ctx, ui)
+        });
 
-        egui::SidePanel::left("left_panel").resizable(false).max_width(120.0).show(ctx, |ui| {
+        egui::SidePanel::left("left_panel").resizable(true).width_range(Rangef::new(100.0,299.0)).show(ctx, |ui| {
             ui.vertical(|ui| {
-                // ui.style_mut().visuals.widgets.noninteractive.bg_fill = egui::Color32::from_rgb(240, 240, 240);
-            
+                
                 ui.style_mut().spacing.button_padding =  vec2(8.0, 8.0);
                 ui.with_layout(egui::Layout::top_down_justified(egui::Align::Center), |ui| {
                     for (page, label) in pages.iter() {
@@ -50,6 +56,8 @@ impl eframe::App for ApplicationComponent {
                 });
             });
         });
+        
+        ctx.data_mut(|d|{d.insert_temp(egui::Id::new("left_panel"), "")});
 
         egui::CentralPanel::default().show(ctx, |ui| {
             match self.current_page {
@@ -70,3 +78,20 @@ impl eframe::App for ApplicationComponent {
 
     }
 }
+
+/*
+
+// 存储数据
+ctx.data_mut(|d| {
+    d.insert_temp(egui::Id::new("my_key"), "Hello World".to_string());
+    d.insert_temp(egui::Id::new("number"), 42i32);
+    d.insert_temp(egui::Id::new("color"), egui::Color32::RED);
+});
+
+// 读取数据
+let text = ctx.data(|d| {
+    d.get_temp::<String>(egui::Id::new("my_key"))
+        .unwrap_or_default()
+});
+
+*/

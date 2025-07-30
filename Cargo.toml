@@ -4,15 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 
-[dependencies.windows]
-version = "0.58"
-features = ["Win32_System_JobObjects", "Win32_System_Threading", "Win32_Security", "Win32_System_Diagnostics", "Win32_System_Performance", "Win32_System_ProcessStatus", "Win32_System_SystemInformation", "Win32_System_Diagnostics_ToolHelp"]
 
 [dependencies]
-eframe = "0.30.0"
+egui = "0.32.0"
+eframe = "0.32.0"
+egui_extras="0.32.0"
 image = "0.25.5"
-egui="0.30.0"
-egui_extras="0.30.0"
+
 fern = "0.7.0"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }

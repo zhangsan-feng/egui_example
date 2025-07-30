@@ -1,10 +1,9 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
-#![allow(rustdoc::missing_crate_level_docs)] // it's an example
+
 
 mod config;
 mod gui;
 mod font;
-mod win32;
+
 use eframe::egui;
 use eframe::egui::IconData;
 use config::logger;
@@ -20,16 +19,10 @@ async fn main() ->eframe::Result {
 
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_transparent(true)
-            .with_inner_size( [1000.0, 500.0])
-            .with_resizable(false)
-            .with_maximized(false)
-            .with_fullscreen(false)
-            .with_maximize_button(false)
+            .with_inner_size( [1400.0, 800.0])
             .with_icon(IconData { rgba:  raw_data, width: w, height: h })
-            .with_decorations(true)  //头顶导航栏是是否显示
-           .with_visible(true)
-           .with_decorations(true)
+            // .with_maximized(true)
+            
         ,
         centered:true,
         ..Default::default()
@@ -38,7 +31,7 @@ async fn main() ->eframe::Result {
     eframe::run_native(
         "egui_example",
         options,
-        Box::new(|cc| Ok(Box::new(gui::home::layout::ApplicationComponent::new(cc)))),
+        Box::new(|cc| Ok(Box::new(gui::layout::ApplicationComponent::new(cc)))),
     )
 }
 
