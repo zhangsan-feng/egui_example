@@ -1,5 +1,5 @@
 use eframe::emath::Align;
-use egui::InnerResponse;
+use egui::{InnerResponse, Stroke};
 use serde::Serialize;
 
 #[derive(Clone, Copy, Debug, PartialEq, Default, Serialize)]
@@ -14,13 +14,15 @@ pub enum SessionType {
 pub struct SettingsSession {
     is_down: bool,
     current_page: SessionType,
+    input_msg:String,
 }
 
 impl SettingsSession {
     pub fn new() -> Self {
         Self {
             is_down: false,
-            current_page: SessionType::SSH
+            current_page: SessionType::SSH,
+            input_msg: "".to_string(),
         }
     }
 
@@ -38,7 +40,7 @@ impl SettingsSession {
             .collapsible(false)
 
             .frame(egui::Frame {
-                fill: egui::Color32::BLACK,
+                fill: egui::Color32::WHITE,
                 stroke: egui::Stroke::NONE,
                 inner_margin: egui::Margin::same(15),
                 outer_margin: egui::Margin::same(15),
@@ -87,7 +89,7 @@ impl SettingsSession {
                         match self.current_page {
                             SessionType::SSH => {
                                 ui.vertical(|ui| {
-                                    ui.set_width(200.0);  // 设置这个垂直布局的宽度
+                                    ui.set_width(200.0);  
                                     ui.label("左侧");
                                 });
 
@@ -95,7 +97,7 @@ impl SettingsSession {
                                 ui.separator();
 
                                 ui.vertical(|ui| {
-                                    ui.set_width(200.0);  // 设置这个垂直布局的宽度
+                                    ui.set_width(200.0);  
                                     ui.label("右边");
                                 });
 
