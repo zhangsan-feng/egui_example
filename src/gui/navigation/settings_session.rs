@@ -1,6 +1,7 @@
-use eframe::emath::Align;
-use egui::{InnerResponse, Stroke};
+use eframe::emath::{Align};
+use egui::{InnerResponse};
 use serde::Serialize;
+use crate::gui::navigation::ssh_component::SshComponent;
 
 #[derive(Clone, Copy, Debug, PartialEq, Default, Serialize)]
 pub enum SessionType {
@@ -12,121 +13,132 @@ pub enum SessionType {
 
 #[derive(Default)]
 pub struct SettingsSession {
-    is_down: bool,
     current_page: SessionType,
-    input_msg:String,
+    position: Option<egui::Pos2>,
+    first_show: bool,
+    ssh_component: SshComponent,
+    window_bg_color: egui::Color32,
+
 }
 
 impl SettingsSession {
     pub fn new() -> Self {
         Self {
-            is_down: false,
-            current_page: SessionType::SSH,
-            input_msg: "".to_string(),
+            current_page:SessionType::SSH,
+            position: None,
+            first_show: true,
+            ssh_component: SshComponent::new(),
+            window_bg_color: egui::Color32::WHITE,
         }
     }
 
-    pub fn view(
-        &mut self,
-        ctx: &egui::Context,
-        state: &mut bool,
-    ) -> Option<InnerResponse<Option<()>>> {
-        egui::Window::new("123")
+    pub fn view(&mut self, ctx: &egui::Context, state: &mut bool) -> Option<InnerResponse<Option<()>>> {
+        let mut window = egui::Window::new("123")
             .title_bar(false)
-            .anchor(egui::Align2::CENTER_CENTER, [0.0, -50.0])
             .fixed_size([800.0, 600.0])
             .resizable(false)
-            .movable(false)
+            .movable(true)
             .collapsible(false)
-
             .frame(egui::Frame {
-                fill: egui::Color32::WHITE,
-                stroke: egui::Stroke::NONE,
+                fill: self.window_bg_color,
+                stroke: egui::Stroke::new(1.0, egui::Color32::BLACK),
                 inner_margin: egui::Margin::same(15),
                 outer_margin: egui::Margin::same(15),
-                shadow: egui::epaint::Shadow::NONE,
+                shadow: egui::epaint::Shadow{
+                    offset: [1; 2],
+                    blur: 8,
+                    spread: 2,
+                    color: egui::Color32::from_black_alpha(60),
+                },
                 corner_radius: egui::CornerRadius::same(5),
-            })
-            .show(ctx, |ui| {
+            });
 
 
-                ui.horizontal(|ui| {
-                    ui.label("新建会话:");
-                    ui.with_layout(egui::Layout::right_to_left(Align::Center), |ui| {
-                        if ui.button("x").clicked() {
-                            *state = false;
-                        };
-                    })
-                });
-                ui.separator();
+        if self.first_show {
+            let screen_rect = ctx.screen_rect();
+            let window_size = egui::Vec2::new(800.0, 600.0);
+            let center_pos = egui::Pos2::new(
+                (screen_rect.width() - window_size.x) * 0.5,
+                (screen_rect.height() - window_size.y) * 0.5 - 50.0  // 向上偏移50像素
+            );
+            self.position = Some(center_pos);
+            self.first_show = false;
+        }
+        self.window_bg_color = ctx.style().visuals.window_fill;
+        if let Some(pos) = self.position {
+            window = window.current_pos(pos);
+        }
 
-                let pages = [
-                    (SessionType::SSH,   "SSH"),
-                    (SessionType::Telnet,"Telnet"),
-                    (SessionType::Serial, "Serial"),
+        window.show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.label("新建会话:");
+                ui.with_layout(egui::Layout::right_to_left(Align::Center), |ui| {
+                    if ui.button("x").clicked() {
+                        *state = false;
+                    };
+                })
+            });
+            ui.separator();
+            ui.add_space(5.0);
 
-                ];
+            let pages = [
+                (SessionType::SSH,   "SSH"),
+                (SessionType::Telnet,"Telnet"),
+                (SessionType::Serial, "Serial"),
+            ];
 
-
-                ui.horizontal(|ui| {
-
-                    for (page, label) in pages.iter() {
-                        let response = ui.add_sized(
-                            [150.0, 30.0],
-                            egui::Button::selectable(self.current_page == *page, *label)
-                        );
-
-                        if response.clicked() {
-                            self.current_page = *page;
-                        }
-                        ui.add_space(4.0);
-                    }
-
-                });
-
-              ui.horizontal(|ui| {
-                        ui.set_height(500.0);
-                        match self.current_page {
-                            SessionType::SSH => {
-                                ui.vertical(|ui| {
-                                    ui.set_width(200.0);  
-                                    ui.label("左侧");
-                                });
-
-
-                                ui.separator();
-
-                                ui.vertical(|ui| {
-                                    ui.set_width(200.0);  
-                                    ui.label("右边");
-                                });
-
-
-                            }
-                            SessionType::Telnet => {
-                                ui.label("Telnet 会话配置");
-                                // Telnet 相关的 UI
-                            }
-                            SessionType::Serial => {
-                                ui.label("Serial 会话配置");
-                                // Serial 相关的 UI
-                            }
-                        }
-
-                    });
-                ui.horizontal(|ui| {
-                    ui.with_layout(
-                        egui::Layout::right_to_left(egui::Align::Center),
-                        |ui| {
-                            if ui.button("取消").clicked() {
-                                *state = false;
-                            }
-                            if ui.button("创建").clicked() {
-                                *state = false;
-                            }
-                        },
+            ui.horizontal(|ui| {
+                for (page, label) in pages.iter() {
+                    let response = ui.add_sized(
+                        [150.0, 30.0],
+                        egui::Button::selectable(self.current_page == *page, *label)
                     );
-                });
-            })
+
+                    if response.clicked() {
+                        self.current_page = *page;
+                    }
+                    ui.add_space(4.0);
+                }
+            });
+
+            ui.add_space(10.0);
+            ui.horizontal(|ui| {
+                ui.set_height(500.0);
+                match self.current_page {
+                    SessionType::SSH => {
+                        self.ssh_component.view(ctx, ui)
+                    }
+                    SessionType::Telnet => {
+                        ui.label("Telnet 会话配置")
+                        // Telnet 相关的 UI
+                    }
+                    SessionType::Serial => {
+                        ui.label("Serial 会话配置")
+                        // Serial 相关的 UI
+                    }
+                }
+            });
+            ui.spacing();
+            ui.horizontal(|ui| {
+                ui.with_layout(
+                    egui::Layout::right_to_left(egui::Align::Center),
+                    |ui| {
+                        if ui.button("取消").clicked() {
+                            *state = false;
+                        }
+                        if ui.button("创建").clicked() {
+                            
+                            *state = false;
+                        }
+                    },
+                );
+            });
+        }).map(|inner_response| {
+            // 保存窗口位置，这样下次打开时就会在同一位置
+            let rect = inner_response.response.rect;
+            self.position = Some(rect.min);
+            inner_response
+        })
     }
+
 }

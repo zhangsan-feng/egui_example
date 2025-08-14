@@ -8,6 +8,18 @@ use eframe::egui;
 use eframe::egui::IconData;
 use config::logger;
 
+/*
+https://aws.github.io/aws-lc-rs/requirements/windows.html
+
+Download the Build Tools for Visual Studio installer.
+Download Windows CMake Installer
+Download and install the Netwide Assembler (NASM)
+Download and install Ninja
+Download LLVM Installer
+*/
+
+
+
 #[tokio::main]
 async fn main() ->eframe::Result {
     // logger::logger_init("./logs/").await;
@@ -21,6 +33,7 @@ async fn main() ->eframe::Result {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size( [1400.0, 800.0])
             .with_icon(IconData { rgba:  raw_data, width: w, height: h })
+
             // .with_maximized(true)
             
         ,
