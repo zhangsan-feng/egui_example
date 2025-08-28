@@ -1,16 +1,64 @@
-use std::hash::Hash;
-use eframe::emath::vec2;
-use egui::Rangef;
-use serde::{Serialize, Deserialize};
+use std::collections::{HashMap, VecDeque};
+use uuid::Uuid;
 use crate::font::font;
-use crate::gui::component::{app_manager, network_manager, process_manager, system_manager};
-use crate::gui::navigation::navigation::Navigation;
+use crate::gui::component::center::center::Center;
+use crate::gui::component::top::top_navigation::Navigation;
+use crate::gui::component::left::left_session::LeftSession;
+use crate::gui::component::top::ssh_component::SshComponent;
 
 
-#[derive(Default)]
+
+pub struct SessionContent {
+    pub history_input: VecDeque<String>,
+    pub current_input: String,
+    pub prefix_input:String,
+    // pub ssh_conn:
+}
+
+impl Default for Store {
+    fn default() -> Self {
+        let mut store = Store {
+            session: Vec::new(),
+            active_session: Vec::new(),
+            session_content: HashMap::new(),
+            default_session: Uuid::new_v4(),
+       
+        };
+
+     
+        for i in 1..=200000 { 
+            let ssh_comp = SshComponent {
+                ssh_username: format!("user{}", i),
+                ssh_password: format!("password{}", i),
+                ssh_port: if i % 3 == 0 { "2222".to_string() } else { "22".to_string() },
+                ssh_host: format!("服务器{} (192.168.1.{})", i, 100 + i),
+                id: Uuid::new_v4(),
+            };
+            
+            store.session.push(ssh_comp);
+        }
+        
+
+        store
+    }
+}
+
+
+pub struct Store{
+    pub session:Vec<SshComponent>,
+    pub active_session:Vec<SshComponent>,
+    pub session_content:HashMap<Uuid,SessionContent>,
+    pub default_session:Uuid,
+}
+
+
+
 pub struct ApplicationComponent {
     top_nav: Navigation,
+    left_session: LeftSession,
+    center:Center,
     left_panel_width: f32,
+    pub store:Store,
 
 }
 
@@ -20,118 +68,44 @@ impl ApplicationComponent {
         font::add_font(&cc.egui_ctx);
         Self {
             top_nav: Navigation::new(),
-            left_panel_width: 120.0,
+            left_session: LeftSession::new(),
+            center:Center::new(),
+            left_panel_width: 200.0,
+            store:Store::default(),
 
         }
     }
+
 }
 
 impl eframe::App for ApplicationComponent {
-    fn save(&mut self, _storage: &mut dyn eframe::Storage) {
-
-    }
-
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        ctx.request_repaint_after(std::time::Duration::from_millis(200));
 
         egui::TopBottomPanel::top("menu_bar").show(ctx, |ui| {
-                egui::Frame::default()
-                    .inner_margin(egui::Margin::same(5))
-                    .show(ui, |ui| {
-                self.top_nav.view(ctx, ui)
-            });
-        });
-
-
-        egui::SidePanel::left("left_panel").resizable(true)
-            .default_width(self.left_panel_width)
-            .width_range(150.0..=400.0)
-            .show(ctx, |ui| {
-            egui::Frame::default()
-                .inner_margin(egui::Margin::same(5))
-                .show(ui, |ui| {ui.vertical(|ui| {
-                // ui.style_mut().spacing.button_padding =  vec2(8.0, 8.0);
-                //
-        
-                    
-                    ui.label("会话");
-                    ui.add_space(5.0);
-                    ui.separator();
-
-                    egui::ScrollArea::vertical().show(ui, |ui| {
-                            for i in 1..=20 {
-                                ui.horizontal(|ui| {
-                                    ui.label(format!("选项 {}", i));
-                                    if ui.button("按钮").clicked() {
-                                        println!("点击了选项 {}", i);
-                                    }
-                                });
-                                ui.separator();
-                            }
-                        });
-
-
-                });
-            });
-        });
-
-
-        // let my_value = ctx.data_mut(|d| {
-        //     d.get_persisted::<String>(egui::Id::from("my_key"))
-        //         .unwrap_or_default()
-        // });
-        // println!("my_value: {:?}", my_value);
-        // ctx.data_mut(|d| {
-        //     d.insert_persisted(egui::Id::from("my_key"), "Hello World".to_string());
-        // });
-
-
-
-        egui::CentralPanel::default().show(ctx, |ui| {
             egui::Frame::default()
                 .inner_margin(egui::Margin::same(5))
                 .show(ui, |ui| {
-                    ui.vertical(|ui| {
-                        ui.horizontal(|ui| {});
-                        ui.add_space(10.0);
-                        ui.separator();
-                        ui.horizontal(|ui| {
-                            // match self.current_page {
-                            //     ApplicationPage::ProcessManagerPage => {
-                            //         process_manager::ProcessManager::new().render(ui)
-                            //     }
-                            //     ApplicationPage::SystemManagerPage => {
-                            //         system_manager::SystemManager::new().render(ui)
-                            //     }
-                            //     ApplicationPage::AppManagerPage => {
-                            //         app_manager::AppManager::new().render(ui)
-                            //     }
-                            //     ApplicationPage::NetworkManagerPage => {
-                            //         network_manager::NetworkManager::new().render(ui)
-                            //     }
-                            // }
-                        });
-                    })
-
+                    self.top_nav.view(ctx, ui,&mut self.store)
                 });
         });
 
+        egui::SidePanel::left("left_panel").resizable(true).default_width(self.left_panel_width)
+            .width_range(200.0..=400.0).show(ctx, |ui| {
+            
+                egui::Frame::default()
+                    .inner_margin(egui::Margin::same(5))
+                    .show(ui, |ui| {
+                        self.left_session.view(ctx, ui,&mut self.store);
+                    });
+            });
 
+        egui::CentralPanel::default().show(ctx, |ui| {
+            egui::Frame::default()
+                // .inner_margin(egui::Margin::same(5))
+                .show(ui, |ui| {
+                    self.center.view(ctx, ui,&mut self.store);
+                });
+        });
     }
 }
-
-/*
-
-// 存储数据
-ctx.data_mut(|d| {
-    d.insert_temp(egui::Id::new("my_key"), "Hello World".to_string());
-    d.insert_temp(egui::Id::new("number"), 42i32);
-    d.insert_temp(egui::Id::new("color"), egui::Color32::RED);
-});
-
-// 读取数据
-let text = ctx.data(|d| {
-    d.get_temp::<String>(egui::Id::new("my_key"))
-        .unwrap_or_default()
-});
-
-*/

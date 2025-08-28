@@ -1,10 +1,14 @@
-use egui::InnerResponse;
 
-#[derive(Default)]
+use uuid::Uuid;
+
+#[derive(Default, Clone, Debug)]
 pub struct SshComponent {
     pub ssh_username:String,
     pub ssh_password:String,
-    pub ssh_port:String
+    pub ssh_port:String,
+    pub ssh_host:String,
+    pub id:Uuid,
+    
 }
 
 
@@ -14,6 +18,8 @@ impl SshComponent {
             ssh_username: "".to_string(),
             ssh_password: "".to_string(),
             ssh_port: "".to_string(),
+            ssh_host: "".to_string(),
+            id:Uuid::new_v4(),
         }
     }
 
@@ -46,7 +52,6 @@ impl SshComponent {
                         .desired_width(f32::INFINITY)
                         .hint_text("请输入用户名")
                 );
-
             });
             ui.add_space(5.0);
             ui.horizontal(|ui| {
@@ -56,12 +61,10 @@ impl SshComponent {
                 });
 
                 ui.add(
-                    egui::TextEdit::singleline(&mut self.ssh_username)
+                    egui::TextEdit::singleline(&mut self.ssh_password)
                         .desired_width(f32::INFINITY)
                         .hint_text("请输入密码")
                 );
-        
-
             });
             ui.add_space(5.0);
             ui.horizontal(|ui| {
@@ -77,6 +80,20 @@ impl SshComponent {
                 );
 
 
+            });
+            
+            ui.add_space(5.0);
+            ui.horizontal(|ui| {
+                ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
+                    ui.set_width(80.0);
+                    ui.label("ip");
+                });
+
+                ui.add(
+                    egui::TextEdit::singleline(&mut self.ssh_host)
+                        .desired_width(f32::INFINITY)
+                        .hint_text("请输入ip")
+                );
             });
 
         });

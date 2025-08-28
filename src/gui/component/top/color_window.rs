@@ -4,6 +4,9 @@ use egui::InnerResponse;
 #[derive(Default)]
 pub struct SettingsColor {
     selected_color: egui::Color32,
+    window_bg_color: egui::Color32,
+    position: Option<egui::Pos2>,
+    first_show: bool,
 }
 
 
@@ -12,19 +15,50 @@ impl SettingsColor {
     pub fn new()->Self{
         Self{
             selected_color: egui::Color32::WHITE,
+            window_bg_color: egui::Color32::default(),
+            first_show: true,
+            position: None,
         }
     }
 
     pub fn view(& mut self, ctx: &egui::Context,  state: &mut bool) -> Option<InnerResponse<Option<()>>> {
-        egui::Window::new("456")
+        let mut window = egui::Window::new("settings_color")
             .title_bar(false)
-            .anchor(egui::Align2::CENTER_CENTER, [0.0, -50.0])
-            .default_size([400.0, 300.0])
+            .fixed_size([300.0, 200.0])
             .resizable(false)
-            .movable(false)
+            .movable(true)
             .collapsible(false)
-            .show(ctx, |ui| {
-                
+            .frame(egui::Frame {
+                fill: self.window_bg_color,
+                stroke: egui::Stroke::new(1.0, egui::Color32::BLACK),
+                inner_margin: egui::Margin::same(15),
+                outer_margin: egui::Margin::same(15),
+                shadow: egui::epaint::Shadow{
+                    offset: [1; 2],
+                    blur: 8,
+                    spread: 2,
+                    color: egui::Color32::from_black_alpha(60),
+                },
+                corner_radius: egui::CornerRadius::same(5),
+            });
+
+
+        if self.first_show {
+            let screen_rect = ctx.screen_rect();
+            let window_size = egui::Vec2::new(300.0, 200.0);
+            let center_pos = egui::Pos2::new(
+                (screen_rect.width() - window_size.x) * 0.5,
+                (screen_rect.height() - window_size.y) * 0.5 
+            );
+            self.position = Some(center_pos);
+            self.first_show = false;
+        }
+        self.window_bg_color = ctx.style().visuals.window_fill;
+        if let Some(pos) = self.position {
+            window = window.current_pos(pos);
+        }
+
+        window.show(ctx, |ui| {
                 ui.vertical(|ui| {
             
                     ui.horizontal(|ui| {

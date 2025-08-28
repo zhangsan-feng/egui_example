@@ -1,7 +1,7 @@
 use egui::Align;
-use gui::navigation::settings_color::SettingsColor;
-use crate::gui;
-use crate::gui::navigation::settings_session::SettingsSession;
+use crate::gui::component::top::color_window::SettingsColor;
+use crate::gui::component::top::session_window::SettingsSession;
+use crate::gui::layout::Store;
 
 #[derive(Default)]
 pub struct Navigation{
@@ -23,11 +23,11 @@ impl Navigation {
     }
 
     
-    pub fn view(& mut self, ctx: &egui::Context, ui:&mut egui::Ui)-> egui::Response{
+    pub fn view(& mut self, ctx: &egui::Context, ui:&mut egui::Ui, store:&mut Store)-> egui::Response{
         
         
         if self.show_new_session_window {
-            self.settings_session_component.view(ctx, &mut self.show_new_session_window);
+            self.settings_session_component.view(ctx, &mut self.show_new_session_window, store);
         }
 
         if self.show_color_picker {

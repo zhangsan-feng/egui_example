@@ -1,7 +1,10 @@
+use std::fmt;
 use eframe::emath::{Align};
 use egui::{InnerResponse};
 use serde::Serialize;
-use crate::gui::navigation::ssh_component::SshComponent;
+use uuid::Uuid;
+use crate::gui::component::top::ssh_component::SshComponent;
+use crate::gui::layout::Store;
 
 #[derive(Clone, Copy, Debug, PartialEq, Default, Serialize)]
 pub enum SessionType {
@@ -11,7 +14,7 @@ pub enum SessionType {
     Serial
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct SettingsSession {
     current_page: SessionType,
     position: Option<egui::Pos2>,
@@ -20,6 +23,8 @@ pub struct SettingsSession {
     window_bg_color: egui::Color32,
 
 }
+
+
 
 impl SettingsSession {
     pub fn new() -> Self {
@@ -32,8 +37,8 @@ impl SettingsSession {
         }
     }
 
-    pub fn view(&mut self, ctx: &egui::Context, state: &mut bool) -> Option<InnerResponse<Option<()>>> {
-        let mut window = egui::Window::new("123")
+    pub fn view(&mut self, ctx: &egui::Context, state: &mut bool, store:&mut Store) -> Option<InnerResponse<Option<()>>> {
+        let mut window = egui::Window::new("settings_session")
             .title_bar(false)
             .fixed_size([800.0, 600.0])
             .resizable(false)
@@ -127,7 +132,15 @@ impl SettingsSession {
                             *state = false;
                         }
                         if ui.button("创建").clicked() {
-                            
+                   
+                            store.session.push(SshComponent{
+                                ssh_username: self.ssh_component.ssh_username.clone(),
+                                ssh_password: self.ssh_component.ssh_password.clone(),
+                                ssh_port: self.ssh_component.ssh_port.clone(),
+                                ssh_host: self.ssh_component.ssh_host.clone(),
+                                id:Uuid::new_v4(),
+                            });
+              
                             *state = false;
                         }
                     },
