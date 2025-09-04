@@ -1,5 +1,6 @@
 use eframe::emath::Align;
 use egui::InnerResponse;
+use crate::gui::layout::Store;
 
 #[derive(Default)]
 pub struct SettingsColor {
@@ -21,7 +22,7 @@ impl SettingsColor {
         }
     }
 
-    pub fn view(& mut self, ctx: &egui::Context,  state: &mut bool) -> Option<InnerResponse<Option<()>>> {
+    pub fn view(& mut self, ctx: &egui::Context, store:&mut Store) -> Option<InnerResponse<Option<()>>> {
         let mut window = egui::Window::new("settings_color")
             .title_bar(false)
             .fixed_size([300.0, 200.0])
@@ -65,7 +66,7 @@ impl SettingsColor {
                         ui.label("颜色选择");
                         ui.with_layout(egui::Layout::right_to_left(Align::Center), |ui|{
                             if ui.button("×").clicked() {
-                                *state = false;
+                                store.show_color_picker = false;
                             };
                         })
                     });
@@ -103,14 +104,14 @@ impl SettingsColor {
                     ui.horizontal(|ui| {
                         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                             if ui.button("取消").clicked() {
-                                *state = false;
+                                store.show_color_picker = false;
                             }
 
                             if ui.button("确定").clicked() {
                                 // 应用颜色到整体背景
 
                                 println!("选中的颜色: {:?}", self.selected_color);
-                                *state = false;
+                                store.show_color_picker = false;
                             }
                         });
                     });

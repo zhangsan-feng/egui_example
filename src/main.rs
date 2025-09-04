@@ -3,14 +3,12 @@
 mod config;
 mod gui;
 mod font;
-mod component;
+mod application;
 
 use eframe::egui;
 use eframe::egui::IconData;
-use eframe::egui_wgpu::winit;
 
-use eframe::wgpu::wgc::command::bundle_ffi::wgpu_render_bundle_insert_debug_marker;
-use config::logger;
+
 
 /*
 https://aws.github.io/aws-lc-rs/requirements/windows.html

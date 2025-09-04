@@ -18,15 +18,18 @@ pub struct SessionContent {
 impl Default for Store {
     fn default() -> Self {
         let mut store = Store {
-            session: Vec::new(),
-            active_session: Vec::new(),
-            session_content: HashMap::new(),
-            default_session: Uuid::new_v4(),
-       
+            session: Default::default(),
+            active_session: Default::default(),
+            session_content: Default::default(),
+            default_session: Default::default(),
+            show_new_session_window: Default::default(),
+            show_color_picker: Default::default(),
+            current_edit_session: Default::default(),
+            is_editing_session: false,
         };
 
      
-        for i in 1..=200000 { 
+        for i in 1..=2 {
             let ssh_comp = SshComponent {
                 ssh_username: format!("user{}", i),
                 ssh_password: format!("password{}", i),
@@ -49,6 +52,10 @@ pub struct Store{
     pub active_session:Vec<SshComponent>,
     pub session_content:HashMap<Uuid,SessionContent>,
     pub default_session:Uuid,
+    pub show_new_session_window:bool,
+    pub show_color_picker:bool,
+    pub current_edit_session:SshComponent,
+    pub is_editing_session:bool,
 }
 
 

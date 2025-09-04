@@ -1,5 +1,6 @@
 
 use uuid::Uuid;
+use crate::gui::layout::Store;
 
 #[derive(Default, Clone, Debug)]
 pub struct SshComponent {
@@ -8,7 +9,6 @@ pub struct SshComponent {
     pub ssh_port:String,
     pub ssh_host:String,
     pub id:Uuid,
-    
 }
 
 
@@ -23,7 +23,18 @@ impl SshComponent {
         }
     }
 
-    pub fn view(&mut self, ctx: &egui::Context, ui:&mut egui::Ui) -> egui::Response {
+    pub fn from_edit_session( session: &SshComponent) -> Self {
+        SshComponent {
+            ssh_username: session.ssh_username.clone(),
+            ssh_password: session.ssh_password.clone(),
+            ssh_port: session.ssh_port.clone(),
+            ssh_host: session.ssh_host.clone(),
+            id: session.id,
+        }
+    }
+
+
+    pub fn view(&mut self, ctx: &egui::Context, ui:&mut egui::Ui, store:&mut Store) -> egui::Response {
         ui.style_mut().visuals.widgets.inactive.bg_fill = egui::Color32::WHITE;
         ui.style_mut().visuals.widgets.inactive.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(200, 200, 200));
         ui.style_mut().visuals.widgets.hovered.bg_stroke = egui::Stroke::new(1.0, egui::Color32::from_rgb(100, 150, 255));

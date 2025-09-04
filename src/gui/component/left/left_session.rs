@@ -37,7 +37,6 @@ impl LeftSession {
 
     
             ScrollArea::vertical()
-                .scroll_source(ScrollSource::NONE)
                 .show_rows(
                     ui,
                     20.0,
@@ -95,6 +94,9 @@ impl LeftSession {
                                     if let Some(session) = store.session.get(row) {
                                     
                                         if ui.add_sized([100.0, 20.0], egui::Button::new("编辑")).clicked() {
+                                            store.current_edit_session = session.clone();
+                                            store.is_editing_session = true;
+                                            store.show_new_session_window = true;
                                             println!("右键菜单: 编辑 {}", session.ssh_host);
                                             ui.close();
                                         }

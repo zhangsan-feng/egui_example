@@ -19,7 +19,7 @@ pub struct SettingsSession {
     current_page: SessionType,
     position: Option<egui::Pos2>,
     first_show: bool,
-    ssh_component: SshComponent,
+    pub ssh_component: SshComponent,
     window_bg_color: egui::Color32,
 
 }
@@ -37,7 +37,7 @@ impl SettingsSession {
         }
     }
 
-    pub fn view(&mut self, ctx: &egui::Context, state: &mut bool, store:&mut Store) -> Option<InnerResponse<Option<()>>> {
+    pub fn view(&mut self, ctx: &egui::Context, store:&mut Store) -> Option<InnerResponse<Option<()>>> {
         let mut window = egui::Window::new("settings_session")
             .title_bar(false)
             .fixed_size([800.0, 600.0])
@@ -58,13 +58,16 @@ impl SettingsSession {
                 corner_radius: egui::CornerRadius::same(5),
             });
 
+        if store.is_editing_session && self.ssh_component.id != store.current_edit_session.id {
+            self.ssh_component = SshComponent::from_edit_session(&store.current_edit_session);
+        }
 
         if self.first_show {
             let screen_rect = ctx.screen_rect();
             let window_size = egui::Vec2::new(800.0, 600.0);
             let center_pos = egui::Pos2::new(
                 (screen_rect.width() - window_size.x) * 0.5,
-                (screen_rect.height() - window_size.y) * 0.5 - 50.0  // 向上偏移50像素
+                (screen_rect.height() - window_size.y) * 0.5 - 50.0
             );
             self.position = Some(center_pos);
             self.first_show = false;
@@ -79,7 +82,7 @@ impl SettingsSession {
                 ui.label("新建会话:");
                 ui.with_layout(egui::Layout::right_to_left(Align::Center), |ui| {
                     if ui.button("x").clicked() {
-                        *state = false;
+                        store.show_new_session_window = false;
                     };
                 })
             });
@@ -111,7 +114,7 @@ impl SettingsSession {
                 ui.set_height(500.0);
                 match self.current_page {
                     SessionType::SSH => {
-                        self.ssh_component.view(ctx, ui)
+                        self.ssh_component.view(ctx, ui, store)
                     }
                     SessionType::Telnet => {
                         ui.label("Telnet 会话配置")
@@ -129,19 +132,32 @@ impl SettingsSession {
                     egui::Layout::right_to_left(egui::Align::Center),
                     |ui| {
                         if ui.button("取消").clicked() {
-                            *state = false;
+                            store.show_new_session_window = false;
                         }
-                        if ui.button("创建").clicked() {
-                   
-                            store.session.push(SshComponent{
-                                ssh_username: self.ssh_component.ssh_username.clone(),
-                                ssh_password: self.ssh_component.ssh_password.clone(),
-                                ssh_port: self.ssh_component.ssh_port.clone(),
-                                ssh_host: self.ssh_component.ssh_host.clone(),
-                                id:Uuid::new_v4(),
-                            });
-              
-                            *state = false;
+                        if ui.button("保存").clicked() {
+                            if store.is_editing_session {
+
+                                if let Some(session) = store.session.iter_mut().find(|s| s.id == store.current_edit_session.id) {
+                                    session.ssh_username = self.ssh_component.ssh_username.clone();
+                                    session.ssh_password = self.ssh_component.ssh_password.clone();
+                                    session.ssh_port = self.ssh_component.ssh_port.clone();
+                                    session.ssh_host = self.ssh_component.ssh_host.clone();
+                                }
+                                store.is_editing_session = false;
+                            } else {
+
+                                store.session.push(SshComponent {
+                                    ssh_username: self.ssh_component.ssh_username.clone(),
+                                    ssh_password: self.ssh_component.ssh_password.clone(),
+                                    ssh_port: self.ssh_component.ssh_port.clone(),
+                                    ssh_host: self.ssh_component.ssh_host.clone(),
+                                    id: Uuid::new_v4(),
+                                });
+                            }
+
+                            store.show_new_session_window = false;
+                            self.first_show = true;
+
                         }
                     },
                 );
