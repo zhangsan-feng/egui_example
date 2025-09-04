@@ -45,6 +45,7 @@ impl Navigation {
                         ssh_port: "".to_string(),
                         ssh_host: "".to_string(),
                         id: Default::default(),
+                        session_conn: None,
                     };
                     store.show_new_session_window = true;
                 }

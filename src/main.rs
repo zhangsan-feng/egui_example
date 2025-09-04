@@ -3,7 +3,7 @@
 mod config;
 mod gui;
 mod font;
-mod application;
+
 
 use eframe::egui;
 use eframe::egui::IconData;

@@ -14,7 +14,7 @@ pub enum SessionType {
     Serial
 }
 
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct SettingsSession {
     current_page: SessionType,
     position: Option<egui::Pos2>,
@@ -152,6 +152,7 @@ impl SettingsSession {
                                     ssh_port: self.ssh_component.ssh_port.clone(),
                                     ssh_host: self.ssh_component.ssh_host.clone(),
                                     id: Uuid::new_v4(),
+                                    session_conn: None,
                                 });
                             }
 

@@ -29,17 +29,18 @@ impl Default for Store {
         };
 
      
-        for i in 1..=2 {
+
             let ssh_comp = SshComponent {
-                ssh_username: format!("user{}", i),
-                ssh_password: format!("password{}", i),
-                ssh_port: if i % 3 == 0 { "2222".to_string() } else { "22".to_string() },
-                ssh_host: format!("服务器{} (192.168.1.{})", i, 100 + i),
+                ssh_username: "root".to_string(),
+                ssh_password: "root".to_string(),
+                ssh_port: "2222".to_string(),
+                ssh_host: "192.168.2.101".to_string(),
                 id: Uuid::new_v4(),
+                session_conn: None,
             };
             
             store.session.push(ssh_comp);
-        }
+
         
 
         store
@@ -51,6 +52,7 @@ pub struct Store{
     pub session:Vec<SshComponent>,
     pub active_session:Vec<SshComponent>,
     pub session_content:HashMap<Uuid,SessionContent>,
+
     pub default_session:Uuid,
     pub show_new_session_window:bool,
     pub show_color_picker:bool,

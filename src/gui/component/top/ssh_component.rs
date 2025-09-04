@@ -2,13 +2,14 @@
 use uuid::Uuid;
 use crate::gui::layout::Store;
 
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone)]
 pub struct SshComponent {
     pub ssh_username:String,
     pub ssh_password:String,
     pub ssh_port:String,
     pub ssh_host:String,
     pub id:Uuid,
+    pub session_conn:Option<ssh2::Session>,
 }
 
 
@@ -20,6 +21,7 @@ impl SshComponent {
             ssh_port: "".to_string(),
             ssh_host: "".to_string(),
             id:Uuid::new_v4(),
+            session_conn: None,
         }
     }
 
@@ -30,6 +32,7 @@ impl SshComponent {
             ssh_port: session.ssh_port.clone(),
             ssh_host: session.ssh_host.clone(),
             id: session.id,
+            session_conn: session.session_conn.clone(),
         }
     }
 
@@ -54,10 +57,10 @@ impl SshComponent {
             ui.horizontal(|ui| {
 
                 ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
-                    ui.set_width(80.0); 
+                    ui.set_width(80.0);
                     ui.label("用户名");
                 });
-                
+
                 ui.add(
                     egui::TextEdit::singleline(&mut self.ssh_username)
                         .desired_width(f32::INFINITY)
@@ -92,7 +95,7 @@ impl SshComponent {
 
 
             });
-            
+
             ui.add_space(5.0);
             ui.horizontal(|ui| {
                 ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
